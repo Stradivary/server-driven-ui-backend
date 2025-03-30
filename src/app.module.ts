@@ -13,6 +13,7 @@ import { UIController } from './modules/ui/app.ui.controller';
       database: 'memory',
       entities: [User],
       synchronize: true,
+      autoLoadEntities: true,
     }),
     AuthModule,
   ],
