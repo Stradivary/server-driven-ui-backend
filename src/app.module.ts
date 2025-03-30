@@ -10,7 +10,7 @@ import { UIController } from './modules/ui/app.ui.controller';
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: 'db.sqlite',
+      database: 'memory',
       entities: [User],
       synchronize: true,
     }),
