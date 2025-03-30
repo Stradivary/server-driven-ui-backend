@@ -7,13 +7,15 @@ import { UIController } from './modules/ui/app.ui.controller';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'memory',
+      type: 'postgres',
+      url: process.env.DATABASE_URL,
       entities: [User],
       synchronize: true,
-      autoLoadEntities: true,
+      ssl: {
+        rejectUnauthorized: false,
+      },
     }),
     AuthModule,
   ],
