@@ -11,7 +11,7 @@ Backend ini dibangun menggunakan **NestJS**, sebuah framework Node.js yang berba
 - **NestJS** - Framework backend berbasis TypeScript.
 - **JWT (JSON Web Token)** - Untuk autentikasi pengguna.
 - **TypeORM** - Untuk koneksi ke database.
-- **SQLite / PostgreSQL** - Penyimpanan data pengguna dan konfigurasi UI.
+- **SQLite / PostgreSQL** (supabase) - Penyimpanan data pengguna dan konfigurasi UI.
 
 ## 📌 Alur Kerja Backend
 1. **Menyediakan JSON UI**
@@ -31,24 +31,41 @@ Backend ini dibangun menggunakan **NestJS**, sebuah framework Node.js yang berba
 ### Backend (NestJS)
 ```
 backend/
-|── dist
-├── src/
-│   ├── app.module.ts
-│   ├── main.ts
-│   ├── modules/
-│   │   ├── services/
-│   │   │   ├── auth.module.ts
-│   │   │   ├── auth.controller.ts
-│   │   │   ├── auth.service.ts
-│   │   │   ├── user.repository.ts
-│   │   ├── ui/
-│   │   │   ├── app.ui.controller.ts
-│   │   ├── user/
-│   │   │   ├── userp.entity.ts
-│   ├── app.module.ts
-│   ├── main.ts
-├── package.json
+|── dist  --> folder untuk hasil build aplikasi
+├── src/ --> folder source aplikasi
+│   ├── app.module.ts --> file module utama aplikasi
+│   ├── main.ts  --> file entry utama aplikasi
+│   ├── modules/ --> folder untuk menyimpan module aplikasi
+│   │   ├── services/ --> folder untuk menyimpan service yang ada pada aplikasi
+│   │   │   ├── auth.module.ts --> file module service aplikasi
+│   │   │   ├── auth.controller.ts --> file module auth controller
+│   │   │   ├── auth.service.ts --> file service aplikasi
+│   │   │   ├── user.repository.ts --> file repository aplikasi
+│   │   ├── ui/ --> folder untuk module ui controller
+│   │   │   ├── app.ui.controller.ts  --> file controller untuk server driven UI
+│   │   ├── user/ --> folder user entity
+│   │   │   ├── userp.entity.ts --> file entity user untuk ORM
+├── package.json --> file list package module untuk membangun dan instalasi aplikasi
 ```
+---
+
+## 🧭 Arsitektur Backend
+
+```
+[Frontend]  ── GET /ui/home ───────────────▶ [UIController]
+            ── POST /auth/register ─────▶ [AuthService → DB]
+            ── POST /auth/login ───────▶ [AuthService → DB]
+            ── GET /auth/profile ──────▶ [AuthGuard → DB]
+                                           ↓
+                                        Supabase
+```
+
+Penjelasan:
+- Setiap endpoint `/ui/...` mengembalikan struktur UI JSON untuk ditampilkan frontend.
+- Endpoint `/auth/...` menangani login dan registrasi, serta profile check berdasarkan token.
+- Semua operasi database dilakukan melalui TypeORM ke Supabase.
+- Backend bertindak sebagai pengontrol penuh UI dan autentikasi.
+
 ---
 
 ## 🚀 Cara menjalankan
